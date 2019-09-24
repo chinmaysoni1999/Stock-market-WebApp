@@ -1,8 +1,40 @@
 {%extends 'quotes/base.html'%}
+{%load crispy_forms_tags%}
 {%block content%}
-<h1>{{user.username}}</h1>
-<h1>{{user.email}}</h1>
+<div class="content-section card-body">
+        <form action='{%url "profile" %}' method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Stock Add</legend>
+                {{ form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Add Stock</button>
+            </div>
+        </form>
+    </div><br>
+<div class="container">
+    <table class="table table-bordered">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">symbol</th>
+          <th scope="col">companyName</th>
+          <th scope="col">previousClose</th>
+          <th scope="col">previousVolume</th>
+          <th scope="col">week52High</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%for ticker in all_tickers%}
+            <tr>
+              <td>{{ticker.symbol}}</td>
+              <td>{{ticker.companyName}}</td>
+              <td>{{ticker.previousClose}}</td>
+              <td>{{ticker.previousVolume}}</td>
+              <td>{{ticker.week52High}}</td>
+            </tr>
+        {%endfor%}
+      </tbody>
+    </table>
+</div>
 {%endblock%}
-
-
-<!-- LOGIN_REDIRECT_URL = 'profile' -->
