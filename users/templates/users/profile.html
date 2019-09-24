@@ -22,6 +22,7 @@
           <th scope="col">previousClose</th>
           <th scope="col">previousVolume</th>
           <th scope="col">week52High</th>
+          <th scope="col">#</th>
         </tr>
       </thead>
       <tbody>
@@ -32,6 +33,7 @@
               <td>{{ticker.previousClose}}</td>
               <td>{{ticker.previousVolume}}</td>
               <td>{{ticker.week52High}}</td>
+              <td><form method="get" action="{% url 'delete' ticker.symbol %}"><button type="submit" class="btn btn-danger">Delete</button></form></td>
             </tr>
         {%endfor%}
       </tbody>

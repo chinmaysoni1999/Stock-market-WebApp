@@ -40,8 +40,8 @@ def profile(request):
     if request.method=='POST':
         form = StockForm(request.POST,instance=request.user)
         if form.is_valid():
-            ticker1 = str(form.cleaned_data.get('ticker'))
-            api_request = requests.get('https://cloud.iexapis.com/stable/stock/'+ticker1+'/quote?token=pk_3f723762156246aa8395298a377c3a67')
+            ticker1 = str(form.cleaned_data.get('ticker')).upper()
+            api_request = requests.get('https://cloud.iexapis.com/stable/stock/'+str(ticker1)+'/quote?token=pk_3f723762156246aa8395298a377c3a67')
             try:
                 api = json.loads(api_request.content)
                 stock_detail = Stocks(ticker=ticker1,owner=request.user)
@@ -56,3 +56,9 @@ def profile(request):
     else:
         form = StockForm()
         return render(request,'users/profile.html',{'form':form,'all_tickers':all_tickers})
+
+def delete_stock(request,stock_tic):
+    item = Stocks.objects.filter(ticker=stock_tic,owner=request.user)
+    item.delete()
+    messages.warning(request,f"{stock_tic} is deleted")
+    return redirect('profile')
