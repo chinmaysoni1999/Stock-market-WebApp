@@ -3,6 +3,7 @@ from django.contrib import messages
 from .forms import UserRegisterForm,StockForm
 from django.contrib.auth.decorators import login_required
 from .models import Stocks
+from .stock_sentiment import *
 import requests
 import json
 
@@ -33,6 +34,13 @@ def profile(request):
         api_request = requests.get('https://cloud.iexapis.com/stable/stock/'+str(i)+'/quote?token=pk_3f723762156246aa8395298a377c3a67')
         try:
             api = json.loads(api_request.content)
+            public_tweets = api_twitter.search(str(i))
+            ans = 0
+            for tweet in public_tweets:
+                analysis = TextBlob(tweet.text)
+                ans+=analysis.sentiment[0]
+            ans = ans/len(public_tweets)
+            api['sentiment'] = ans
             all_tickers.append(api)
         except Exception as e:
             api = 'Error'
